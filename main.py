@@ -24,16 +24,89 @@ class Matrix:
         # return the matrix
         return matrix
     
-    def print_matrix(self):
-        # for loop to iterate through the rows
-        for i in range(self.rows):
-            # for loop to iterate through the columns
-            for j in range(self.columns):
-                # print the element
-                print(self.matrix[i][j], end = " ")
-            # print a new line
-            print()
+def print_matrix(a):
+    # for loop to iterate through the rows
+    for i in range(a.rows):
+        # for loop to iterate through the columns
+        for j in range(a.columns):
+            # print the element
+            print(a.matrix[i][j], end = " ")
+        # print a new line
+        print()
     
-# Object of the above class
-# a= Matrix(2, 2)
+"""
+a = Matrix(2, 2)
+1 6
+7 4
+b = Matrix(2, 2)
+5 2
+3 8
+Addition
+c = add(a, b)
+5 6
+7 8
+"""
+# function to add two elements
+def add_elements(a, b):
+    return max(a, b)
+
+# function to multiply two elements
+def multiply_elements(a, b):
+    return a + b
+
+# function to add two matrices
+def add(a, b):
+    # check if the dimensions of the matrices are equal
+    if a.rows != b.rows or a.columns != b.columns:
+        raise ValueError("The dimensions of the matrices are not equal")
+    # create an empty matrix
+    c = Matrix(a.rows, a.columns)
+    # for loop to iterate through the rows
+    for i in range(a.rows):
+        # for loop to iterate through the columns
+        for j in range(a.columns):
+            # add the elements
+            c.matrix[i][j] = add_elements(a.matrix[i][j], b.matrix[i][j])
+    # return the matrix
+    return c
+
+# a = Matrix(2, 2)
 # b = Matrix(2, 2)
+# c = add(a, b)
+# print_matrix(c)
+
+# function to multiply two matrices
+def multiply(a, b):
+    # check if the number of columns of a is equal to the number of rows of b
+    if a.columns != b.rows:
+        raise ValueError("The number of columns of a is not equal to the number of rows of b")
+    # create an empty matrix
+    c = Matrix(a.rows, b.columns)
+    # for loop to iterate through the rows
+    for i in range(a.rows):
+        # for loop to iterate through the columns
+        for j in range(b.columns):
+            # for loop to iterate through the columns of a
+            for k in range(a.columns):
+                # add the elements
+                c.matrix[i][j] = add_elements(multiply_elements(a.matrix[i][k], b.matrix[k][j]), c.matrix[i][j])
+    # return the matrix
+    return c
+
+"""
+a = Matrix(2, 2)
+1 6
+7 4
+b = Matrix(2, 2)
+5 2
+3 8
+Multiplication
+c = multiply(a, b)
+9 14
+12 12
+"""
+
+a = Matrix(2, 2)
+b = Matrix(2, 2)
+c = multiply(a, b)
+print_matrix(c)
