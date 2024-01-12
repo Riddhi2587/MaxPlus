@@ -7,13 +7,19 @@ from multimethod import multimethod
 
 # matrix class in python
 class Matrix:
-    def __init__(self, string, zeros = False, rows = 0, columns = 0):   
-        if zeros == True:
+    def __init__(self, string, zeros = 0, rows = 0, columns = 0):   
+        if zeros == 1:
             self.rows = rows
             self.columns = columns
             self.matrix = [[float(0) for i in range(columns)] for j in range(rows)]
             return
         
+        elif zeros == 2:
+            self.rows = rows
+            self.columns = columns
+            self.matrix = [[float('-inf') for i in range(columns)] for j in range(rows)]
+            return
+
         else:
             # remove the first and last character
             string = string[1:-1]
@@ -94,7 +100,7 @@ def add(a: Matrix, b: Matrix):
     if a.rows != b.rows or a.columns != b.columns:
         raise ValueError("The dimensions of the matrices are not equal")
     # create an empty matrix
-    c = Matrix("", True, a.rows, a.columns)
+    c = Matrix("", 1, a.rows, a.columns)
     # for loop to iterate through the rows
     for i in range(a.rows):
         # for loop to iterate through the columns
@@ -115,7 +121,7 @@ def multiply(a: Matrix, b: Matrix):
     if a.columns != b.rows:
         raise ValueError("The number of columns of a is not equal to the number of rows of b")
     # create an empty matrix
-    c = Matrix("", True, a.rows, b.columns)
+    c = Matrix("", 2, a.rows, b.columns)
     # for loop to iterate through the rows
     for i in range(a.rows):
         # for loop to iterate through the columns
@@ -197,6 +203,15 @@ def exp(a: Matrix):
 
     return ans
 
+def gamma(a : Matrix):
+    tempMat = a
+    ans = a
+    # print_matrix(ans)
+    for i in range(a.rows-1):
+        tempMat = multiply(tempMat, a)
+        ans = add(ans, tempMat)
+    return ans
+
 """
 a = Matrix(2, 2)
 1 6
@@ -210,16 +225,17 @@ c = multiply(a, b)
 12 12
 """
 
-a = Matrix("[[1.5 1.9 1.5], [2 1.4 1.5], [1.4 1.6 1.9]]")
+a = Matrix("[[7 9 5 5 3 7], [7 5 2 7 0 4], [8 0 3 3 8 0], [7 2 5 7 5 9], [4 2 6 6 8 8], [3 0 5 7 1 2]]")
 # a = Matrix("[[1 2 3], []]")
-# print(a.rows)
-# b = Matrix("[[5 2], [3 8]]")
+# print_matrix(a)
+# a = Matrix("[[-5 2], [-3 8]]")
 # b = Matrix(2, 2)
-# c = multiply(2, a)
-# c = power(a, 6)
+# c = multiply(a, a)
+# c = power(a, 2)
 
-c = exp(a)
-# c = b
+# c = gamma(a)
+b = subtract(a, 8)
+c = gamma(b)
 print_matrix(c)
 
 """
