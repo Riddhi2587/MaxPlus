@@ -27,8 +27,14 @@ Functions:
    print_matrix(c)
 
 4. Exponent
+    If a is a matrix
     c = exp(a)
     print_matrix(c)
+
+    If a is a scalar
+    c = exp(a)
+    print(a)
+    
 
 5. Gamma
     c = gamma(a)
