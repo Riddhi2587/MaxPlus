@@ -216,6 +216,14 @@ def exp(a: Matrix):
 
     return ans
 
+# @multimethod
+def exp(a: int):
+    if(a < 1):
+        return 0
+    a_floor = int(a)
+    ans = a_floor * a - fact(a_floor)
+    return ans
+
 
 def gamma(a : Matrix):
     tempMat = a
@@ -284,7 +292,39 @@ def maper(a: Matrix):
 
     return sum
 
-a = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 1]]")
+def log(a: int):
+    from sympy import symbols, solve
+    x = symbols('x')
+    # solve the equation x^2 + x = 2a
+    eq1 = x**2 + x - 2*a
+    sol1 = solve(eq1)
+
+    # eq2 = x**2 + 3*x + 2 - 2*a
+    sol1 = [float(i) for i in sol1]
+    c = 0
+    # b = 0
+    for i in sol1:
+        if i > 0:
+            # a = i
+            c = int(i)
+
+    ans = (a + fact(c+1))/(c + 1)
+    return round(ans, 6)
+
+def is_commutative(a: Matrix, b: Matrix):
+    if a.columns != b.rows:
+        raise ValueError("The number of columns of a is not equal to the number of rows of b")
+    
+    c = multiply(a, b)
+    d = multiply(b, a)
+    if c.matrix == d.matrix:
+        return True
+    else:
+        return False
+    
+
+# a = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 1]]")
+# b = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 5]]")
 # b = Matrix("[[18 17 16 16 15], [17 18 16 16 15], [15 15 18 18 17], [15 15 18 18 17], [16 16 19 19 18]]")
 # a = Matrix("[[1 2 3]]")
 # a = Matrix("[[2 4 2], [4 3 1], [2 1 3]]")
@@ -304,9 +344,11 @@ a = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 1]]")
 # print(d)
 # a = 5 
 # 3.66
-# e = log(a)
-# e = maper(a)
+# e = exp(3.8)
 # print(e)
+# log(5)
+# e = maper(a)
+# print(is_commutative(a, b))
 
 # print(ev)
 # print(c)
