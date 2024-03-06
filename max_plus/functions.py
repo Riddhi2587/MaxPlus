@@ -60,6 +60,9 @@ class Matrix:
 
     def find_critical_cycles(self):
         maxi = float('-inf')
+        # if cycles are not present, find them
+        if(self.cycles == []):
+            self.find_cycles()
         for i in range(len(self.cycles)):
             temp = 0
             for j in range(len(self.cycles[i])):
@@ -195,7 +198,7 @@ def maxEl(a: Matrix):
                 maxi = a.matrix[i][j]
     return maxi
 
-# @multimethod
+@multimethod
 def exp(a: Matrix):
     ans = subtract(a, 1)
     tempMat = a
@@ -216,13 +219,13 @@ def exp(a: Matrix):
 
     return ans
 
-# @multimethod
+@multimethod
 def exp(a: int):
     if(a < 1):
         return 0
     a_floor = int(a)
     ans = a_floor * a - fact(a_floor)
-    return ans
+    return round(ans, 6)
 
 
 def gamma(a : Matrix):
@@ -322,21 +325,170 @@ def is_commutative(a: Matrix, b: Matrix):
     else:
         return False
     
+def is_irreducible(a: Matrix):
+    # convert the matrix to an adjacency list
+    adj_list = []
+    for i in range(a.rows):
+        temp = []
+        for j in range(a.columns):
+            if a.matrix[i][j] != float('-inf'):
+                temp.append(j)
+        adj_list.append(temp)
+
+    # create a visited array
+    visited = [False for i in range(a.rows)]
+    stack = []
+    dfs1(adj_list, visited, 0, stack)
+
+    # make list of size a.rows
+    adj_list1 = [[] for i in range(a.rows)]
+    for i in range(a.rows):
+        for j in range(a.columns):
+            if a.matrix[i][j] != float('-inf'):
+                adj_list1[j].append(i)
+
+    visited1 = [False for i in range(a.rows)]
+    count = 0
+    # traverse stack and call dfs2 for each element if not visited
+    while stack:
+        i = stack.pop()
+        if not visited1[i]:
+            count += 1
+            if count > 1:
+                return False
+            dfs2(adj_list1, visited1, i)
+
+    return True
+
+
+# given adjacency list, perform a dfs
+def dfs1(adj_list, visited, v, stack):
+    visited[v] = True
+    for i in adj_list[v]:
+        if not visited[i]:
+            dfs1(adj_list, visited, i, stack)
+    stack.append(v)
+
+# given adjacency list, perform a dfs
+def dfs2(adj_list, visited, v):
+    visited[v] = True
+    for i in adj_list[v]:
+        if not visited[i]:
+            dfs2(adj_list, visited, i)
+
+def dfs3(adj_list, visited, v, temp):
+    visited[v] = True
+    temp.append(v)
+    for i in adj_list[v]:
+        if not visited[i]:
+            dfs3(adj_list, visited, i, temp)
+
+def gcd(a, b):
+    x = a
+    y = b
+    while(y):
+        x, y = y, x % y
+ 
+    return x
+
+def period(a: Matrix):
+    if(is_irreducible(a) == False):
+        raise ValueError("The matrix is not irreducible")
+
+    if a.rows != a.columns:
+        raise ValueError("The matrix is not square")
+    
+    a.find_critical_cycles()
+    # print(a.critical_cycles)
+    
+    adj_list = [[] for i in range(a.rows)]
+    
+    visEl = set()
+
+    for i in range(len(a.critical_cycles)):
+        for j in range(len(a.critical_cycles[i])):
+            visEl.add(a.critical_cycles[i][j])
+            adj_list[a.critical_cycles[i][j]].append(a.critical_cycles[i][(j+1)%len(a.critical_cycles[i])])
+            adj_list[a.critical_cycles[i][(j+1)%len(a.critical_cycles[i])]].append(a.critical_cycles[i][j])
+
+    # remove duplicates
+    for i in range(a.rows):
+        adj_list[i] = list(set(adj_list[i]))
+
+    # print(adj_list)
+
+    # dfs
+    visited = [False for i in range(a.rows)]
+    components = []
+    for i in visEl:
+        if not visited[i]:
+            temp = []
+            dfs3(adj_list, visited, i, temp)
+            components.append(set(temp))
+
+    comp = len(components)
+    gcds = [0 for i in range(comp)]
+    # print(components)
+
+    for i in range(len(a.critical_cycles)):
+        el = a.critical_cycles[i][0] 
+        for j in range(comp):
+            if el in components[j]:
+                if gcds[j] == 0:
+                    gcds[j] = len(a.critical_cycles[i])
+                else:
+                    gcds[j] = gcd(gcds[j], len(a.critical_cycles[i]))
+
+    ans = lcm(gcds)
+    return ans
+
+def find_lcm(num1, num2):
+    if(num1>num2):
+        num = num1
+        den = num2
+    else:
+        num = num2
+        den = num1
+    rem = num % den
+    while(rem != 0):
+        num = den
+        den = rem
+        rem = num % den
+    gcd = den
+    lcm = int(int(num1 * num2)/int(gcd))
+    return lcm
+
+def lcm(l: list):
+    num1 = l[0]
+    if len(l) == 1:
+        return num1
+    num2 = l[1]
+    lc = find_lcm(num1, num2)
+    
+    for i in range(2, len(l)):
+        lc = find_lcm(lc, l[i])
+
+    return lc
 
 # a = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 1]]")
-# b = Matrix("[[4 4 3 8 1], [3 3 4 5 4], [5 3 4 7 3], [2 1 2 3 0], [6 6 4 8 5]]")
+# b = Matrix("[[0 7 5 0], [6 0 0 0], [0 0 0 7.5], [7 0 0 0]]")
 # b = Matrix("[[18 17 16 16 15], [17 18 16 16 15], [15 15 18 18 17], [15 15 18 18 17], [16 16 19 19 18]]")
 # a = Matrix("[[1 2 3]]")
-# a = Matrix("[[2 4 2], [4 3 1], [2 1 3]]")
+# a = Matrix("[[3 4 2], [2 3 1], [2 3 1]]")
 # a = Matrix("[[-3 -2 8], [1 0 4], [2 5 -6]]")
 # a = Matrix("[[0 3 E E], [1 -1 E E], [E E 2 E], [E E E 1]]")
-# a = Matrix("[[2 0 -1 3 1], [3 -1 1 2 0], [0 4 -1 2 1], [1 2 2 1 0], [-1 0 1 0 0]]")
+# a = Matrix("[[2 0 -1 3 1], [3 -1 1 2 0], [0 4 -1 2 1], [1 2 2 1 E], [E 0 1 0 0]]")
 # a = Matrix("[[3 6], [2 1]]")
 # print_matrix(a)
 # b = Matrix(2, 2)
 # c = multiply(a, b)
 # print_matrix(c)
 # c = power(a, 2)
+# c = exp(a)
+# c = is_irreducible(a)
+# c = period(a)
+# print(c)
+# print_matrix(c)
 
 # c = a.eigenval()
 # print("Eigenvalue is", c)
