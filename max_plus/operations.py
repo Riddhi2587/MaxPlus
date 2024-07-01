@@ -6,24 +6,20 @@ from helpers import HelperFunctions as hf
 
 class MatrixOperations:
 
-    # function to add two elements
     @staticmethod
     def add_elements(a, b):
         return round(max(a, b), 6)
     
-    # function to multiply two elements
     @staticmethod
     def multiply_elements(a, b):
         return round(a + b, 6)
 
-    # function to add two matrices
     # @multimethod
     @staticmethod
     def add(a: Matrix, b: Matrix):
         if a.rows != b.rows or a.columns != b.columns:
             raise ValueError("The dimensions of the matrices are not equal")
-        # creates an empty matrix
-        # c = Matrix("", 1, a.rows, a.columns)
+
         c = zeros(a.rows, a.columns)
         
         for i in range(a.rows):
@@ -31,20 +27,15 @@ class MatrixOperations:
                 c.matrix[i][j] = MatrixOperations.add_elements(a.matrix[i][j], b.matrix[i][j])
         return c
     
-    # function to multiply two matrices
     @multimethod
     # @staticmethod
     def multiply(a: Matrix, b: Matrix):
         if a.columns != b.rows:
             raise ValueError("The number of columns of a is not equal to the number of rows of b")
-        # create an empty matrix
-        # c = Matrix("", 2, a.rows, b.columns)
+
         c = zeros(a.rows, b.columns)
-        # for loop to iterate through the rows
         for i in range(a.rows):
-            # for loop to iterate through the columns
             for j in range(b.columns):
-                # for loop to iterate through the columns of a
                 for k in range(a.columns):
                     c.matrix[i][j] = MatrixOperations.add_elements(MatrixOperations.multiply_elements(a.matrix[i][k], b.matrix[k][j]), c.matrix[i][j])
         return c
@@ -52,8 +43,6 @@ class MatrixOperations:
     @multimethod
     # @staticmethod
     def multiply(a: int, b: Matrix):
-        # creates an empty matrix
-        # c = Matrix("", True, b.rows, b.columns)
         c = zeros(b.rows, b.columns)
         for i in range(b.rows):
             for j in range(b.columns):
@@ -63,8 +52,6 @@ class MatrixOperations:
     # @multimethod
     @staticmethod
     def subtract(a: Matrix, b: float):
-        # create an empty matrix
-        # c = Matrix("", True, a.rows, a.columns)
         c = zeros(a.rows, a.columns)
         for i in range(a.rows):
             for j in range(a.columns):
@@ -78,7 +65,6 @@ class MatrixOperations:
         if a.rows != a.columns:
             raise ValueError("The matrix is not square")
         c = a
-        # multiply the matrix n-1 times
         for i in range(n-1):
             c = MatrixOperations.multiply(c, a)
         return c
@@ -144,7 +130,6 @@ class MatrixOperations:
             raise ValueError("The number of rows of a is not equal to the length of b")
         
         c = []
-        # add negative of b values to rows of a and store in c
         for i in range(a_rows):
             tempc = []
             for j in range(a_columns):
@@ -153,21 +138,18 @@ class MatrixOperations:
             c.append(tempc)
 
         # print_matrix(c)
-        # iterate over columns of c and store maximum of each column in a list
         tempsoln = [float('-inf') for i in range(a_columns)]
         for i in range(len(c)):
             for j in range(len(c[i])):
                 if c[i][j] > tempsoln[j]:
                     tempsoln[j] = c[i][j]
 
-        # iterate over maxi and multiply each element by -1
         for i in range(len(tempsoln)):
             if tempsoln[i] != 0:
                 tempsoln[i] *= -1
 
         # print(tempsoln)
         M = []
-        # iterate over columns of a
         for i in range(a_columns):
             temp = []
             for j in range(a.rows):
@@ -183,7 +165,6 @@ class MatrixOperations:
 
         # print(d)
 
-        # iterate over M and store elements in S
         for i in range(len(M)):
             for j in range(len(M[i])):
                 S.add(M[i][j])
@@ -194,7 +175,6 @@ class MatrixOperations:
 
         # print(S)
 
-        # iterate over S and check if S contains all elements from 0 to a.rows - 1
         for i in range(a.rows):
             if i not in S:
                 return "No solution"
