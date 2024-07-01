@@ -15,12 +15,9 @@ class Matrix:
         self.hf = HelperFunctions()
 
         if(isinstance(string, list)):
-            # self.matrix = string
-            # string is a list of lists of ints. Convert to float and save in self.matrix
             for i in range(len(string)):
                 temp = []
                 for j in range(len(string[i])):
-                    # check if string[i][j] == 'E' and convert to float('-inf')
                     if(string[i][j] == 'E'):
                         temp.append(float('-inf'))
                     else:
@@ -31,7 +28,6 @@ class Matrix:
             return
         
         elif(isinstance(string, str)):
-            # string will be given as "zero[rows, columns]" or "ones[rows, columns]" or "infs[rows, columns]"
             if(string[:4] == "zero"):
                 self.rows = int(string[5])
                 self.columns = int(string[7])
@@ -57,7 +53,6 @@ class Matrix:
                 self.columns = int(string[7])
                 # check if randrange is given
                 if(randrange != False):
-                    # check if randrange is list or give error
                     if(isinstance(randrange, list)):
                         for i in range(self.rows):
                             temp = []
@@ -78,7 +73,6 @@ class Matrix:
                 
     # make __str__ method
     def __str__(self):
-        # return string with newline characters except for last line
         s = ""
         for i in range(self.rows):
             for j in range(self.columns):
@@ -141,8 +135,6 @@ class Matrix:
         return ans
     
     def maper(self):
-        # traverse through the matrix, takes one value from each rown and column and add them and
-        # stores the combination with the maximum value
         import dlib   
 
         b = []
