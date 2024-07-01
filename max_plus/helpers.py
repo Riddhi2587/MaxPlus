@@ -68,7 +68,6 @@ class HelperFunctions:
 
         return cols
     
-    # given adjacency list, perform a dfs
     @staticmethod
     def dfs1(adj_list, visited, v, stack):
         visited[v] = True
@@ -77,7 +76,6 @@ class HelperFunctions:
                 HelperFunctions.dfs1(adj_list, visited, i, stack)
         stack.append(v)
 
-    # given adjacency list, perform a dfs
     @staticmethod
     def dfs2(adj_list, visited, v):
         visited[v] = True
@@ -130,7 +128,6 @@ class HelperFunctions:
         return lc
 
     def subtract(self, a: list, b: list):
-        # create an empty matrix
         c = []
 
         for i in range(len(a)):
