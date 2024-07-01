@@ -3,12 +3,10 @@ from helpers import HelperFunctions as hf
 
 class BasicOperations:
 
-    # function to add two elements
     @staticmethod
     def add_elements(a, b):
         return round(max(a, b), 6)
-    
-    # function to multiply two elements
+
     @staticmethod
     def multiply_elements(a, b):
         return round(a + b, 6)
@@ -16,9 +14,7 @@ class BasicOperations:
     @multimethod
     @staticmethod
     def add(a, b: float):
-        # a is list of lists
-        # b is float
-        # returns a list of lists
+
         c = []
         for i in range(len(a)):
             temp = []
@@ -30,8 +26,6 @@ class BasicOperations:
     @multimethod
     @staticmethod
     def add(a, b):
-        # a and b are lists of lists
-        # returns a list of lists
         c = []
         for i in range(len(a)):
             temp = []
@@ -47,8 +41,6 @@ class BasicOperations:
     
     @staticmethod
     def multiply(a, b):
-        # a and b are lists of lists
-        # returns a list of lists
         a_rows = len(a)
         a_columns = len(a[0])
         b_rows = len(b)
@@ -103,7 +95,6 @@ class BasicOperations:
     def is_irreducible(a):
         a_rows = len(a)
         a_columns = len(a[0])
-        # convert the matrix to an adjacency list
         adj_list = []
         for i in range(a_rows):
             temp = []
@@ -112,7 +103,6 @@ class BasicOperations:
                     temp.append(j)
             adj_list.append(temp)
 
-        # create a visited array
         visited = [False for i in range(a_rows)]
         stack = []
         hf.dfs1(adj_list, visited, 0, stack)
@@ -126,7 +116,6 @@ class BasicOperations:
 
         visited1 = [False for i in range(a_rows)]
         count = 0
-        # traverse stack and call dfs2 for each element if not visited
         while stack:
             i = stack.pop()
             if not visited1[i]:
@@ -139,8 +128,6 @@ class BasicOperations:
     
     # @staticmethod
     def maper(a):
-        # traverse through the matrix, takes one value from each rown and column and add them and
-        # stores the combination with the maximum value
         if len(a) == 1:
             return a[0][0]
         
